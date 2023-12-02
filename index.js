@@ -13,6 +13,7 @@ ConnectMongo("mongodb://127.0.0.1:27017/url-shortner").then((err, data) => {
 });
 
 app.use(express.json());
+
 app.use("/url", urlRoute);
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
