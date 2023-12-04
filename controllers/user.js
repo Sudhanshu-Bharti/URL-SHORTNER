@@ -24,10 +24,10 @@ async function HandleUserLogin(req, res) {
   if (!user) return res.render("login", { error: "Invalid Login credentials" });
 
   //setting up cookies
-  const sessionID = uuidv4();
-  setUser(sessionID, user);
-  res.cookie("uid", sessionID);
-  console.log(req);
+  // const sessionID = uuidv4();
+  const token = setUser(user);
+  // res.cookie("uid", sessionID);
+  res.cookie("token", token);
   return res.redirect("/");
 }
 

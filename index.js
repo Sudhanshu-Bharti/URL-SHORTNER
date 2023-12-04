@@ -2,12 +2,12 @@ const express = require("express");
 const urlRoute = require("./routes/url");
 const { ConnectMongo } = require("./connect");
 const URL = require("./models/url");
-const User = require("./models/user");
 const path = require("path");
 const staticRoute = require("./routes/staticRouter");
 const userRoute = require("./routes/user");
 const cookieParser = require("cookie-parser");
-const { restrictLoggedInUser, checkAuth } = require("./middleware/auth");
+const { restrictTo, checkForAuthentication } = require("./middleware/auth");
+const router = require("./routes/url");
 const app = express();
 
 const PORT = 2000;
@@ -19,9 +19,10 @@ ConnectMongo("mongodb://127.0.0.1:27017/url-shortner").then((err, data) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(checkForAuthentication);
 
-app.use("/url", restrictLoggedInUser, urlRoute);
-app.use("/", checkAuth, staticRoute);
+app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoute);
+app.use("/", staticRoute);
 app.use("/user", userRoute);
 
 app.set("view engine", "ejs");
